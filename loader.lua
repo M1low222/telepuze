@@ -2,7 +2,7 @@
 -- ЭТОТ ФАЙЛ ЗАПУСКАЕТСЯ В ИСПОЛНИТЕЛЕ!
 -- Просто вставьте этот код и выполните
 
-print("=== Navigation System Loader ===")
+print("=== Navigation System Loader v5.0 ===")
 print("Loading system in 4 parts...")
 
 -- Список частей (RAW ссылки на GitHub)
@@ -19,8 +19,13 @@ local function loadPart(url, partNumber)
     
     local success, result = pcall(function()
         -- Загрузка по URL
-        local content = game:HttpGet(url, true)
-        return loadstring(content)()
+        local content = game:HttpGet(url)
+        local loadedFunction = loadstring(content)
+        if loadedFunction then
+            return loadedFunction()
+        else
+            error("Failed to loadstring")
+        end
     end)
     
     if success then
@@ -34,17 +39,29 @@ end
 
 -- Загружаем все части по порядку
 for i, url in ipairs(partUrls) do
-    if not loadPart(url, i) then
-        error("Failed to load part " .. i .. ". Stopping.")
-        return
+    local loaded = loadPart(url, i)
+    if not loaded then
+        warn("Failed to load part " .. i .. ". Trying to continue...")
     end
-    wait(0.3) -- Небольшая задержка между частями
+    wait(0.5) -- Задержка между частями
 end
 
-print("\n" .. string.rep("=", 50))
-print("🎉 NAVIGATION SYSTEM COMPLETELY LOADED!")
-print("🎮 Ready to use!")
-print(string.rep("=", 50))
-
--- Возвращаем доступ к системе если нужно
-return _G.NAV_SYSTEM
+-- Проверяем, загрузилась ли система
+if _G.NAV_SYSTEM then
+    print("\n" .. string.rep("=", 50))
+    print("🎉 NAVIGATION SYSTEM COMPLETELY LOADED!")
+    print("🎮 Ready to use!")
+    print("📊 Points loaded: " .. tostring(#_G.NAV_SYSTEM.coordinateSystem))
+    print(string.rep("=", 50))
+    
+    -- Возвращаем доступ к системе
+    return _G.NAV_SYSTEM
+else
+    warn("⚠️ Navigation system failed to load completely!")
+    warn("Try loading parts manually in order:")
+    warn("1. part1_config.lua")
+    warn("2. part2_functions.lua")
+    warn("3. part3_gui.lua")
+    warn("4. part4_main.lua")
+    return nil
+end
