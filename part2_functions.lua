@@ -11,7 +11,7 @@ end
 
 local NAV = _G.NAV_SYSTEM
 
--- УПРОЩЕННАЯ Функция проверки персонажа
+-- 1. Проверка персонажа
 function NAV.isCharacterValid()
     if not NAV.character or not NAV.character.Parent then
         return false
@@ -28,7 +28,7 @@ function NAV.isCharacterValid()
     return true
 end
 
--- Функция рестарта скрипта
+-- 2. Рестарт скрипта
 function NAV.restartScript()
     print("=== ПЕРЕЗАГРУЗКА СКРИПТА ===")
     
@@ -69,7 +69,7 @@ function NAV.restartScript()
     print("Перезагрузка завершена!")
 end
 
--- Функция создания парта
+-- 3. Создание платформы
 function NAV.createBaseFlightPlatform()
     if not NAV.isCharacterValid() then 
         print("Персонаж не валиден для создания платформы")
@@ -101,14 +101,14 @@ function NAV.createBaseFlightPlatform()
     return NAV.baseFlightPart
 end
 
--- Функция обновления позиции парта
+-- 4. Обновление платформы
 function NAV.updateBaseFlightPlatform()
     if not NAV.baseFlightPart or not NAV.baseFlightPart.Parent then return end
     if not NAV.isCharacterValid() then return end
     NAV.baseFlightPart.Position = NAV.humanoidRootPart.Position - Vector3.new(0, 3.5, 0)
 end
 
--- Функция Noclip
+-- 5. Noclip
 function NAV.setNoclip(state)
     if not NAV.isCharacterValid() then
         print("Не могу установить noclip: персонаж не валиден")
@@ -139,7 +139,7 @@ function NAV.setNoclip(state)
     end
 end
 
--- Функция нахождения ближайшей точки
+-- 6. Найти ближайшую точку
 function NAV.findNearestPoint()
     if not NAV.isCharacterValid() then
         return 1
@@ -160,7 +160,7 @@ function NAV.findNearestPoint()
     return nearestIndex
 end
 
--- Функция проверки текущей точки
+-- 7. Получить текущую точку
 function NAV.getCurrentPointIndex()
     if not NAV.isCharacterValid() then
         return nil
@@ -179,12 +179,12 @@ function NAV.getCurrentPointIndex()
     return nil
 end
 
--- Функция получения текущей цели
+-- 8. Получить текущую цель
 function NAV.getCurrentTarget()
     return NAV.coordinateSystem[NAV.currentTargetIndex]
 end
 
--- Функция остановки полета на базу
+-- 9. Остановить полет на базу
 function NAV.stopBaseFlight()
     if not NAV.isBaseFlightActive then
         return
@@ -225,7 +225,7 @@ function NAV.stopBaseFlight()
     print("Полет остановлен")
 end
 
--- Функция полета на базу
+-- 10. Полетеить на базу
 function NAV.flyToBase()
     print("=== НАЖАТА КНОПКА GO BASE ===")
     
@@ -276,7 +276,7 @@ function NAV.flyToBase()
     
     local travelTime = distance / NAV.baseFlySpeed
     
-    local tweenInfo = NAV.TweenService:Create(
+    local tweenInfo = TweenInfo.new(
         travelTime,
         Enum.EasingStyle.Linear,
         Enum.EasingDirection.Out
@@ -339,7 +339,7 @@ function NAV.flyToBase()
     print("=== ПОЛЕТ ЗАПУЩЕН ===")
 end
 
--- Функция обновления скорости полета на базу
+-- 11. Обновить отображение скорости
 function NAV.updateBaseSpeedDisplay()
     if NAV.BaseSpeedValueLabel then
         NAV.BaseSpeedValueLabel.Text = string.format("Скорость полета: %d", NAV.baseFlySpeed)
@@ -357,7 +357,7 @@ function NAV.updateBaseSpeedDisplay()
     end
 end
 
--- Функция установки горячей клавиши
+-- 12. Установить клавишу
 function NAV.setKeybind(key)
     NAV.currentKeybind = key
     
@@ -368,7 +368,7 @@ function NAV.setKeybind(key)
     print("Установлена горячая клавиша:", tostring(key))
 end
 
--- Функция обновления GUI
+-- 13. Обновить GUI
 function NAV.updateGUI()
     if NAV.PositionIndicator then
         if NAV.isCharacterValid() then
@@ -490,7 +490,7 @@ function NAV.updateGUI()
     end
 end
 
--- Функция плавного перемещения
+-- 14. Плавная телепортация
 function NAV.smoothTeleportToTarget(targetPosition)
     if not NAV.isCharacterValid() then
         print("Не могу телепортировать: персонаж не валиден")
@@ -506,7 +506,7 @@ function NAV.smoothTeleportToTarget(targetPosition)
     local distance = (NAV.humanoidRootPart.Position - targetPosition).Magnitude
     local travelTime = math.min(distance / NAV.flySpeed, 5)
     
-    local tweenInfo = NAV.TweenService:Create(
+    local tweenInfo = TweenInfo.new(
         travelTime,
         Enum.EasingStyle.Quad,
         Enum.EasingDirection.Out
@@ -525,7 +525,7 @@ function NAV.smoothTeleportToTarget(targetPosition)
     return true
 end
 
--- Функция Gap Up
+-- 15. Gap Up
 function NAV.gapUp()
     if NAV.isGapping then 
         print("Телепортация уже идет!")
@@ -582,7 +582,7 @@ function NAV.gapUp()
     
     print("Поднимаем на " .. NAV.gapHeight .. " метров...")
     
-    local liftTweenInfo = NAV.TweenService:Create(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local liftTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local liftGoal = {CFrame = CFrame.new(elevatedPosition)}
     local liftTween = NAV.TweenService:Create(NAV.humanoidRootPart, liftTweenInfo, liftGoal)
     liftTween:Play()
@@ -600,7 +600,7 @@ function NAV.gapUp()
     print("=== GAP UP ЗАВЕРШЕН ===")
 end
 
--- Функция Gap Down
+-- 16. Gap Down
 function NAV.gapDown()
     if NAV.isGapping then 
         print("Телепортация уже идет!")
@@ -657,7 +657,7 @@ function NAV.gapDown()
     
     print("Опускаем на " .. NAV.gapHeight .. " метров...")
     
-    local lowerTweenInfo = NAV.TweenService:Create(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local lowerTweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     local lowerGoal = {CFrame = CFrame.new(loweredPosition)}
     local lowerTween = NAV.TweenService:Create(NAV.humanoidRootPart, lowerTweenInfo, lowerGoal)
     lowerTween:Play()
@@ -675,7 +675,7 @@ function NAV.gapDown()
     print("=== GAP DOWN ЗАВЕРШЕН ===")
 end
 
--- Функция загрузки персонажа
+-- 17. Загрузить персонажа
 function NAV.loadCharacter(newCharacter)
     print("Загрузка нового персонажа...")
     
@@ -716,4 +716,4 @@ function NAV.loadCharacter(newCharacter)
 end
 
 print("✓ Functions loaded successfully!")
-return true
+return NAV
