@@ -5,35 +5,22 @@
 print("=== Navigation System Loader ===")
 print("Loading system in 4 parts...")
 
--- Список частей (замените URLs на ваши GitHub ссылки)
+-- Список частей (RAW ссылки на GitHub)
 local partUrls = {
-    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part1_config.lua",
-    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part2_functions.lua", 
-    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part3_gui.lua",
-    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part4_main.lua"
+    "https://raw.githubusercontent.com/M1low222/telepuze/main/part1_config.lua",
+    "https://raw.githubusercontent.com/M1low222/telepuze/main/part2_functions.lua", 
+    "https://raw.githubusercontent.com/M1low222/telepuze/main/part3_gui.lua",
+    "https://raw.githubusercontent.com/M1low222/telepuze/main/part4_main.lua"
 }
-
--- Или локальные пути если скачали файлы:
--- local partUrls = {
---     "part1_config.lua",
---     "part2_functions.lua",
---     "part3_gui.lua",
---     "part4_main.lua"
--- }
 
 -- Функция безопасной загрузки
 local function loadPart(url, partNumber)
     print("Loading part " .. partNumber .. "...")
     
     local success, result = pcall(function()
-        if url:match("^https?://") then
-            -- Загрузка по URL
-            local content = game:HttpGet(url)
-            return loadstring(content)()
-        else
-            -- Локальный файл (для тестирования)
-            return loadfile(url)()
-        end
+        -- Загрузка по URL
+        local content = game:HttpGet(url, true)
+        return loadstring(content)()
     end)
     
     if success then
