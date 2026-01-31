@@ -1,0 +1,63 @@
+-- === NAVIGATION SYSTEM LOADER ===
+-- ЭТОТ ФАЙЛ ЗАПУСКАЕТСЯ В ИСПОЛНИТЕЛЕ!
+-- Просто вставьте этот код и выполните
+
+print("=== Navigation System Loader ===")
+print("Loading system in 4 parts...")
+
+-- Список частей (замените URLs на ваши GitHub ссылки)
+local partUrls = {
+    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part1_config.lua",
+    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part2_functions.lua", 
+    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part3_gui.lua",
+    "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/part4_main.lua"
+}
+
+-- Или локальные пути если скачали файлы:
+-- local partUrls = {
+--     "part1_config.lua",
+--     "part2_functions.lua",
+--     "part3_gui.lua",
+--     "part4_main.lua"
+-- }
+
+-- Функция безопасной загрузки
+local function loadPart(url, partNumber)
+    print("Loading part " .. partNumber .. "...")
+    
+    local success, result = pcall(function()
+        if url:match("^https?://") then
+            -- Загрузка по URL
+            local content = game:HttpGet(url)
+            return loadstring(content)()
+        else
+            -- Локальный файл (для тестирования)
+            return loadfile(url)()
+        end
+    end)
+    
+    if success then
+        print("✓ Part " .. partNumber .. " loaded successfully!")
+        return true
+    else
+        warn("✗ ERROR loading part " .. partNumber .. ": " .. tostring(result))
+        return false
+    end
+end
+
+-- Загружаем все части по порядку
+for i, url in ipairs(partUrls) do
+    if not loadPart(url, i) then
+        error("Failed to load part " .. i .. ". Stopping.")
+        return
+    end
+    wait(0.3) -- Небольшая задержка между частями
+end
+
+print("\n" .. string.rep("=", 50))
+print("🎉 NAVIGATION SYSTEM COMPLETELY LOADED!")
+print("🎮 Ready to use!")
+print(string.rep("=", 50))
+
+-- Возвращаем доступ к системе если нужно
+return _G.NAV_SYSTEM
