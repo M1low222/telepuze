@@ -5,12 +5,7 @@ print("=== Loading Navigation System: Part 3/4 ===")
 
 -- Проверяем, загружены ли предыдущие части
 if not _G.NAV_SYSTEM then
-    error("ERROR: Part 1 not loaded! Please load in order: 1 → 2 → 3 → 4")
-    return
-end
-
-if not _G.NAV_SYSTEM.isCharacterValid then
-    error("ERROR: Part 2 not loaded! Please load parts in correct order")
+    error("ERROR: Part 1 not loaded! Please load parts in order: 1 → 2 → 3 → 4")
     return
 end
 
@@ -26,6 +21,7 @@ function NAV.createGUI()
         NAV.ScreenGui = nil
     end
     
+    -- Создаем ScreenGui
     NAV.ScreenGui = Instance.new("ScreenGui")
     NAV.ScreenGui.Name = "NavigationGUI"
     NAV.ScreenGui.Parent = NAV.player:WaitForChild("PlayerGui")
@@ -218,23 +214,23 @@ function NAV.createGUI()
     FillCorner.CornerRadius = UDim.new(0, 10)
     FillCorner.Parent = SliderFill
 
-    NAV.SliderButton = Instance.new("TextButton")
-    NAV.SliderButton.Name = "SliderButton"
-    NAV.SliderButton.Size = UDim2.new(0, 25, 0, 25)
-    NAV.SliderButton.Position = UDim2.new((NAV.flySpeed - NAV.minSpeed) / (NAV.maxSpeed - NAV.minSpeed), -12.5, 0.5, -12.5)
-    NAV.SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    NAV.SliderButton.Text = ""
-    NAV.SliderButton.AutoButtonColor = false
-    NAV.SliderButton.Parent = NAV.SpeedSlider
+    local SliderButton = Instance.new("TextButton")
+    SliderButton.Name = "SliderButton"
+    SliderButton.Size = UDim2.new(0, 25, 0, 25)
+    SliderButton.Position = UDim2.new((NAV.flySpeed - NAV.minSpeed) / (NAV.maxSpeed - NAV.minSpeed), -12.5, 0.5, -12.5)
+    SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    SliderButton.Text = ""
+    SliderButton.AutoButtonColor = false
+    SliderButton.Parent = NAV.SpeedSlider
 
     local ButtonCorner = Instance.new("UICorner")
     ButtonCorner.CornerRadius = UDim.new(0, 12)
-    ButtonCorner.Parent = NAV.SliderButton
+    ButtonCorner.Parent = SliderButton
 
     local ButtonStroke = Instance.new("UIStroke")
     ButtonStroke.Color = Color3.fromRGB(200, 200, 200)
     ButtonStroke.Thickness = 2
-    ButtonStroke.Parent = NAV.SliderButton
+    ButtonStroke.Parent = SliderButton
 
     -- Настройка скорости полета на базу
     local BaseSpeedFrame = Instance.new("Frame")
@@ -500,13 +496,13 @@ function NAV.createGUI()
     
     speedSliderClickArea.MouseButton1Down:Connect(function()
         isDraggingSpeed = true
-        NAV.SliderButton.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+        SliderButton.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
         updateSpeedFromMouse()
     end)
     
-    NAV.SliderButton.MouseButton1Down:Connect(function()
+    SliderButton.MouseButton1Down:Connect(function()
         isDraggingSpeed = true
-        NAV.SliderButton.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+        SliderButton.BackgroundColor3 = Color3.fromRGB(220, 220, 220)
     end)
     
     -- Обработка слайдера скорости полета на базу
@@ -562,7 +558,7 @@ function NAV.createGUI()
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             if isDraggingSpeed then
                 isDraggingSpeed = false
-                NAV.SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             end
             
             if isDraggingBaseSpeed then
@@ -614,4 +610,4 @@ function NAV.createGUI()
 end
 
 print("✓ GUI functions loaded successfully!")
-return true
+return NAV
